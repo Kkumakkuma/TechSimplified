@@ -1,124 +1,53 @@
 """
-TechSimplified Auto Post Generator
-Generates SEO-optimized tech guides using OpenAI GPT API
+TechSimplified Auto Post Generator v2
+- GPT generates unique long-tail keyword topics dynamically
+- used_topics.json prevents any duplicate content
+- High-CPC keywords + FAQ sections for Google featured snippets
+- Internal linking to boost SEO
 """
 
 from openai import OpenAI
 import datetime
+import json
 import os
 import random
 import re
 
-TOPIC_POOLS = {
-    "how_to": [
-        "How to Speed Up Your Computer in {number} Easy Steps",
-        "How to Set Up a VPN on Any Device in {year}",
-        "How to Free Up Storage on Your Phone Fast",
-        "How to Transfer Files Between Phone and PC Wirelessly",
-        "How to Set Up Two-Factor Authentication on Everything",
-        "How to Back Up Your Phone Automatically in {year}",
-        "How to Screen Record on Any Device",
-    ],
-    "ai_tools": [
-        "Best Free AI Tools You Should Be Using in {year}",
-        "{number} AI Productivity Tools That Save Hours Every Week",
-        "How to Use AI to Write Emails Faster",
-        "Best AI Image Generators Compared {year}",
-        "How to Use ChatGPT Like a Pro: {number} Tips",
-        "AI Tools for Students: Complete Guide {year}",
-        "How to Automate Your Work with AI in {year}",
-    ],
-    "cybersecurity": [
-        "How to Know If Your Password Has Been Hacked",
-        "{number} Signs Your Phone Has Been Hacked",
-        "Best Password Managers Compared {year}",
-        "How to Spot Phishing Emails: {number} Red Flags",
-        "How to Protect Your Privacy Online in {year}",
-        "Is Public WiFi Safe? What You Need to Know",
-        "How to Remove Your Personal Data from the Internet",
-    ],
-    "software": [
-        "Best Free Alternatives to Expensive Software in {year}",
-        "Google Sheets Tips and Tricks You Did Not Know",
-        "{number} Hidden Features in Windows 11",
-        "Best Browser Extensions for Productivity in {year}",
-        "How to Use Notion for Beginners: Complete Guide",
-        "Excel vs Google Sheets: Which Should You Use in {year}",
-        "Best Free Photo Editing Software in {year}",
-    ],
-    "troubleshooting": [
-        "WiFi Keeps Disconnecting? {number} Ways to Fix It",
-        "Computer Running Slow? {number} Fixes That Actually Work",
-        "How to Fix Bluetooth Not Working on Windows",
-        "Phone Battery Draining Fast? {number} Proven Fixes",
-        "How to Fix Chrome Using Too Much Memory",
-        "Laptop Overheating? {number} Ways to Cool It Down",
-        "How to Fix Slow Internet Speed at Home",
-    ],
-    "gadgets": [
-        "Best Budget Laptops Under $500 in {year}",
-        "Best Wireless Earbuds Compared {year}",
-        "iPhone vs Android: Which Is Better in {year}",
-        "Best Smart Home Devices for Beginners in {year}",
-        "Best Monitors for Working from Home {year}",
-        "Mechanical vs Membrane Keyboard: Which to Choose",
-        "Best External Hard Drives and SSDs in {year}",
-    ],
-}
+BLOG_NAME = "TechSimplified"
+BLOG_NICHE = "technology"
+BLOG_DESCRIPTION = "Making technology simple and accessible for everyone."
 
-SYSTEM_PROMPT = """You are an expert tech writer for a blog called TechSimplified.
-Write SEO-optimized, informative, and easy-to-follow tech guides.
+CATEGORIES = [
+    "how-to",     "ai-tools",     "cybersecurity",     "software",
+    "troubleshooting",     "gadgets",     "productivity-apps",     "smart-home",
+    "vpn",     "cloud-storage",     "phone-tips",     "pc-tips",
+    "streaming",     "online-privacy",     "tech-deals",
+]
 
-Rules:
-- Write in a friendly, clear tone that anyone can understand
-- No jargon without explanation
-- Use short paragraphs (2-3 sentences max)
-- Include practical, step-by-step instructions where applicable
-- Use headers (##) to break up sections
+SYSTEM_PROMPT = """You are an expert technology writer for TechSimplified.
+You write SEO-optimized, highly informative articles that rank on Google.
+
+Writing rules:
+- Friendly, conversational but authoritative tone (like a trusted financial advisor friend)
+- Short paragraphs (2-3 sentences max)
+- Use ## for section headers (H2) and ### for subsections (H3)
 - Include bullet points and numbered lists
-- Write between 1200-1800 words
-- Naturally include the main keyword 3-5 times
-- Include a compelling introduction
-- End with a clear conclusion/summary
+- Write 1500-2200 words
+- Naturally weave the main keyword throughout (4-6 times)
+- Start with a hook that addresses the reader's pain point
+- Include specific numbers, percentages, and real examples
+- End with a clear actionable takeaway
+- Do NOT use markdown title (# Title) - start directly with content
 - Do NOT include AI disclaimers
-- Write as an experienced tech journalist
-- Include specific product names, versions, and examples
-- Do NOT use markdown title (# Title) - just start with the content
+- Write as a tech expert and IT professional sharing expertise
+
+SEO rules:
+- Include a "Frequently Asked Questions" section at the end with 3-4 Q&As using ### for each question
+- Use power words in subheadings (Ultimate, Essential, Proven, Complete)
+- Write in second person ("you") to engage readers
+- Include comparison elements (vs, compared to, better than)
+- Add year references where relevant for freshness
 """
-
-
-def pick_topic():
-    year = datetime.datetime.now().year
-    number = random.choice([3, 5, 7, 10, 12, 15])
-    category = random.choice(list(TOPIC_POOLS.keys()))
-    title_template = random.choice(TOPIC_POOLS[category])
-    title = title_template.format(year=year, number=number)
-    return title, category
-
-
-def generate_post_content(title, category):
-    client = OpenAI()
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        max_tokens=4000,
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": f"Write a comprehensive blog post with the title: \"{title}\"\n\nCategory: {category.replace('_', ' ')}\n\nRemember to write 1200-1800 words, use ## for section headers, and make it SEO-friendly.",
-            },
-        ],
-    )
-    return response.choices[0].message.content
-
-
-def slugify(title):
-    slug = title.lower()
-    slug = re.sub(r'[^a-z0-9\s-]', '', slug)
-    slug = re.sub(r'[\s]+', '-', slug)
-    slug = re.sub(r'-+', '-', slug)
-    slug = slug.strip('-')
-    return slug
 
 
 def get_repo_root():
@@ -126,62 +55,242 @@ def get_repo_root():
     return os.path.dirname(script_dir)
 
 
-def get_existing_titles():
-    posts_dir = os.path.join(get_repo_root(), '_posts')
-    titles = set()
+def load_used_topics():
+    """Load previously used topic slugs."""
+    filepath = os.path.join(get_repo_root(), "scripts", "used_topics.json")
+    if os.path.exists(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
+def save_used_topics(topics):
+    filepath = os.path.join(get_repo_root(), "scripts", "used_topics.json")
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(topics, f, indent=2)
+
+
+def get_existing_slugs():
+    """Get all existing post slugs from _posts/."""
+    posts_dir = os.path.join(get_repo_root(), "_posts")
+    slugs = set()
     if os.path.exists(posts_dir):
         for filename in os.listdir(posts_dir):
-            if filename.endswith('.md'):
-                title_part = filename[11:-3]
-                titles.add(title_part)
+            if filename.endswith(".md"):
+                # Remove date prefix and .md suffix
+                slug = re.sub(r"^\d{4}-\d{2}-\d{2}-", "", filename[:-3])
+                # Normalize: remove trailing random numbers
+                slug = re.sub(r"-\d{2,3}$", "", slug)
+                slugs.add(slug)
+    return slugs
+
+
+def get_recent_titles(limit=10):
+    """Get recent post titles for internal linking context."""
+    posts_dir = os.path.join(get_repo_root(), "_posts")
+    titles = []
+    if os.path.exists(posts_dir):
+        files = sorted(os.listdir(posts_dir), reverse=True)
+        for filename in files[:limit]:
+            if filename.endswith(".md"):
+                filepath = os.path.join(posts_dir, filename)
+                with open(filepath, "r", encoding="utf-8") as f:
+                    for line in f:
+                        if line.startswith("title:"):
+                            title = line.split(":", 1)[1].strip().strip('"')
+                            titles.append(title)
+                            break
     return titles
 
 
-def create_post():
-    existing = get_existing_titles()
-    for _ in range(10):
-        title, category = pick_topic()
-        slug = slugify(title)
-        if slug not in existing:
-            break
-    else:
-        title, category = pick_topic()
-        slug = slugify(title) + f"-{random.randint(100, 999)}"
+def slugify(title):
+    slug = title.lower()
+    slug = re.sub(r"[^a-z0-9\s-]", "", slug)
+    slug = re.sub(r"[\s]+", "-", slug)
+    slug = re.sub(r"-+", "-", slug)
+    return slug.strip("-")
 
+
+def generate_unique_topic(used_topics, existing_slugs):
+    """Ask GPT to generate a unique, high-CPC long-tail keyword topic."""
+    client = OpenAI()
+    year = datetime.datetime.now().year
+    category = random.choice(CATEGORIES)
+
+    used_list = "\n".join(f"- {t}" for t in used_topics[-50:]) if used_topics else "(none yet)"
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        max_tokens=200,
+        temperature=1.0,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    f"You generate blog post titles for a {BLOG_NICHE} blog. "
+                    "Generate exactly ONE unique, SEO-optimized blog title.\n\n"
+                    "Requirements:\n"
+                    "- Long-tail keyword (5-12 words) that people actually search on Google\n"
+                    "- High commercial intent (topics where advertisers pay high CPC)\n"
+                    "- Specific and actionable (not generic)\n"
+                    "- Include numbers, year, or power words when natural\n"
+                    f"- Relevant to {year}\n"
+                    "- MUST be completely different from the used titles below\n"
+                    "- DO NOT just rephrase an existing title\n\n"
+                    "Reply with ONLY the title, nothing else."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Category: {category.replace('-', ' ')}\n\n"
+                    f"Already used titles (DO NOT repeat or rephrase these):\n{used_list}\n\n"
+                    "Generate one new unique title:"
+                ),
+            },
+        ],
+    )
+
+    title = response.choices[0].message.content.strip().strip('"').strip("'")
+    slug = slugify(title)
+
+    # Verify it's actually unique
+    norm_slug = re.sub(r"-\d{2,3}$", "", slug)
+    if norm_slug in existing_slugs or norm_slug in [slugify(t) for t in used_topics[-100:]]:
+        # Retry once with stronger instruction
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            max_tokens=200,
+            temperature=1.2,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        f"Generate a COMPLETELY NEW and UNIQUE {BLOG_NICHE} blog title. "
+                        f"Category: {category.replace('-', ' ')}. "
+                        f"This MUST NOT overlap with any existing content. "
+                        f"Think of a specific subtopic or angle that hasn't been covered. "
+                        f"Use long-tail keywords (6-12 words). Year: {year}. "
+                        "Reply with ONLY the title."
+                    ),
+                },
+                {"role": "user", "content": "Generate:"},
+            ],
+        )
+        title = response.choices[0].message.content.strip().strip('"').strip("'")
+        slug = slugify(title)
+
+    return title, category, slug
+
+
+def generate_post_content(title, category, recent_titles):
+    """Generate high-quality blog post with FAQ and internal linking."""
+    client = OpenAI()
+
+    internal_links_hint = ""
+    if recent_titles:
+        links = "\n".join(f"- {t}" for t in recent_titles[:5])
+        internal_links_hint = (
+            f"\n\nFor internal linking, naturally reference 1-2 of these related articles "
+            f"where relevant (use the exact title in a mention like "
+            f"'as we covered in [Article Title]'):\n{links}"
+        )
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        max_tokens=5000,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": (
+                    f'Write a comprehensive blog post titled: "{title}"\n\n'
+                    f"Category: {category.replace('-', ' ')}\n\n"
+                    "Structure:\n"
+                    "1. Hook intro (address the reader's problem)\n"
+                    "2. 4-6 detailed sections with ## headers\n"
+                    "3. Practical tips with specific examples\n"
+                    "4. FAQ section (## Frequently Asked Questions) with 3-4 ### questions\n"
+                    "5. Brief conclusion with call-to-action\n\n"
+                    "Write 1500-2200 words. Make it genuinely helpful and unique."
+                    f"{internal_links_hint}"
+                ),
+            },
+        ],
+    )
+
+    return response.choices[0].message.content
+
+
+def generate_meta_description(title):
+    """Generate a unique, compelling meta description."""
+    client = OpenAI()
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        max_tokens=100,
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "Write a compelling meta description for a blog post. "
+                    "150-160 characters max. Include the main keyword. "
+                    "Add a call-to-action. Reply with ONLY the description."
+                ),
+            },
+            {"role": "user", "content": f"Title: {title}"},
+        ],
+    )
+    desc = response.choices[0].message.content.strip().strip('"')
+    return desc[:160]
+
+
+def create_post():
+    """Generate and save a new unique blog post."""
+    used_topics = load_used_topics()
+    existing_slugs = get_existing_slugs()
+    recent_titles = get_recent_titles(10)
+
+    title, category, slug = generate_unique_topic(used_topics, existing_slugs)
     print(f"Generating post: {title}")
     print(f"Category: {category}")
 
-    content = generate_post_content(title, category)
+    content = generate_post_content(title, category, recent_titles)
+    description = generate_meta_description(title)
 
     today = datetime.datetime.now()
-    date_str = today.strftime('%Y-%m-%d')
+    date_str = today.strftime("%Y-%m-%d")
     filename = f"{date_str}-{slug}.md"
 
-    posts_dir = os.path.join(get_repo_root(), '_posts')
+    posts_dir = os.path.join(get_repo_root(), "_posts")
     os.makedirs(posts_dir, exist_ok=True)
-
     filepath = os.path.join(posts_dir, filename)
 
     frontmatter = f"""---
 layout: post
 title: "{title}"
 date: {today.strftime('%Y-%m-%d %H:%M:%S')} +0000
-categories: [{category.replace('_', '-')}]
-description: "{title} - Easy-to-follow tech guides and tips."
+categories: [{category}]
+description: "{description}"
+tags: [{category}, {BLOG_NICHE.replace(' ', '-')}, {today.year}]
 ---
 
 {content}
 """
 
-    with open(filepath, 'w', encoding='utf-8') as f:
+    with open(filepath, "w", encoding="utf-8") as f:
         f.write(frontmatter)
+
+    # Track used topic
+    used_topics.append(title)
+    save_used_topics(used_topics)
 
     print(f"Post saved: {filepath}")
     return filepath, filename
 
-if __name__ == '__main__':
-    # Every 5th post: generate a Gumroad promo post
+
+if __name__ == "__main__":
     from promo_post import should_write_promo, create_promo_post
+
     if should_write_promo():
         print("Generating promotional post...")
         filepath, filename = create_promo_post()
