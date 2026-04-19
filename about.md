@@ -1,21 +1,39 @@
 ---
 layout: default
-title: About TechSimplified
+title: "About TechSimplified"
 permalink: /about/
-description: "TechSimplified makes technology easy to understand with practical guides and how-tos."
+description: "About Kkuma Park, the writer behind TechSimplified."
 ---
 
 # About TechSimplified
 
-TechSimplified is your go-to resource for practical tech guides that anyone can follow.
+## Who writes here
 
-## What We Cover
+My name is **Kkuma Park**. I'm an independent writer and developer based in Seoul, South Korea. I've spent more than a decade in IT, built a handful of small software products, and along the way accumulated a list of personal experiments, mistakes, and hard-won notes that turned into this blog.
 
-- **How-To Guides** - Step-by-step tutorials for everyday tech
-- **Software Tips** - Get more out of the tools you use
-- **Cybersecurity** - Stay safe online with simple tips
-- **AI & Automation** - Harness the power of AI in daily life
-- **Gadgets & Reviews** - Honest takes on the latest tech
-- **Troubleshooting** - Fix common tech problems fast
+I've been writing code for 12 years and still hate most tech tutorials — they assume too much or too little. TechSimplified is my attempt to explain exactly what a non-technical person needs to know, nothing more.
 
-New articles published daily. Subscribe to our [RSS feed](/feed.xml) to never miss a post.
+## What TechSimplified is for
+
+TechSimplified is my working notebook on **technology**. Every article here exists because I needed the answer myself at some point and couldn't find a version I trusted.
+
+I try to follow three rules on this site:
+
+1. **Write from experience, not summary.** If I haven't actually done it, I won't pretend I have.
+2. **Show the numbers.** Where real data, tests, or costs are useful, I include them.
+3. **Update when I'm wrong.** If I learn that an earlier post was inaccurate, I fix the post and add a note.
+
+## How I run this blog
+
+- Posts are published on a regular schedule.
+- I use AI tools (such as ChatGPT) to help with drafting structure and outlines, but every published post is reviewed, edited, and fact-checked by me before it goes live.
+- Affiliate links, when used, are marked. I only link to products I have actually used or would genuinely recommend.
+- Ads on this site come from Google AdSense once my site is approved. Ads help keep the site free to read.
+
+## Get in touch
+
+Questions, corrections, feedback, or collaboration ideas are welcome.
+
+**Email:** [kkumaspark@gmail.com](mailto:kkumaspark@gmail.com)
+
+For privacy, legal, and data practices, please see the [Privacy Policy](/privacy-policy/), [Terms](/terms/), and [Disclaimer](/disclaimer/).
