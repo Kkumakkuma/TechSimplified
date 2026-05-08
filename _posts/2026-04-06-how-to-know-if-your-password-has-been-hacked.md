@@ -6,6 +6,8 @@ categories: [cybersecurity]
 description: "How to Know If Your Password Has Been Hacked - Easy-to-follow tech guides and tips."
 ---
 
+![How to Know If Your Password Has Been Hacked](/TechSimplified/assets/pin-images/2026-04-06-how-to-know-if-your-password-has-been-hacked.png)
+
 In our increasingly digital world, the importance of keeping our accounts secure cannot be overstated. With hackers and cybercriminals constantly on the lookout for vulnerable targets, knowing if your password has been compromised is crucial for safeguarding your online identity. In this guide, we'll walk you through the steps to check if your password has been hacked, the signs to watch for, and the best practices to enhance your password security.
 
 ## The Importance of Password Security

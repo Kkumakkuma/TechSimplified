@@ -7,6 +7,8 @@ description: "Discover if the new Lenovo Legion 5 is the ultimate gaming laptop 
 tags: [pc-tips, technology, 2026]
 ---
 
+![Is the New Lenovo Legion 5 Worth It for Gamers in 2026? My 3-Month Review](/TechSimplified/assets/pin-images/2026-04-26-is-the-new-lenovo-legion-5-worth-it-for-gamers-in-2026-my-3-month-review.png)
+
 Spending $1,800 on a gaming laptop is a hefty investment, so when I decided to get the Lenovo Legion 5 in January 2026, I had high expectations. I had been using a thin-and-light laptop for gaming, which ultimately left me desperate for better performance. When I opened my Legion 5 for the first time, I felt a mixture of excitement and trepidation. Would it live up to the $1,800 price tag? After three months of rigorous testing, I have plenty to share about whether this gaming machine is truly worth it for enthusiasts like me.
 
 ## How I Researched This

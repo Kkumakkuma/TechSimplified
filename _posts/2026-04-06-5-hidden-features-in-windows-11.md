@@ -6,6 +6,8 @@ categories: [software]
 description: "5 Hidden Features in Windows 11 - Easy-to-follow tech guides and tips."
 ---
 
+![5 Hidden Features in Windows 11](/TechSimplified/assets/pin-images/2026-04-06-5-hidden-features-in-windows-11.png)
+
 With the release of Windows 11, Microsoft has introduced a plethora of new features and enhancements designed to enhance the user experience. While many users are familiar with the primary changes, such as the centered taskbar and the new Start menu, there are several hidden features in Windows 11 that can significantly boost productivity and make your computing experience more enjoyable. In this guide, we'll uncover five of these hidden gems, ensuring you can make the most out of Windows 11.
 
 ## 1. Snap Layouts and Snap Groups

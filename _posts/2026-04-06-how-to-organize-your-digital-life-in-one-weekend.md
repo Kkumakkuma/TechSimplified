@@ -6,6 +6,8 @@ categories: [productivity, organization]
 description: "A step-by-step guide to decluttering your digital life, organizing accounts, and building a system that keeps everything under control."
 ---
 
+![How to Organize Your Digital Life in One Weekend](/TechSimplified/assets/pin-images/2026-04-06-how-to-organize-your-digital-life-in-one-weekend.png)
+
 You have 47 open browser tabs. Your Downloads folder has 2,000 files. You are paying for 6 streaming services but only use 2. Sound familiar?
 
 The average person manages **100+ digital accounts** and spends **$273 per month on subscriptions**. Most of that digital clutter is costing you time, money, and mental energy without you even realizing it.
