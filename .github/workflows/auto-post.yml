@@ -2,7 +2,7 @@ name: Auto Generate Blog Post
 
 on:
   schedule:
-    - cron: '0 2/4 * * *'
+    - cron: '23 3/6 * * *'
   workflow_dispatch:
 
 permissions:
